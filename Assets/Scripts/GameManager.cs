@@ -1,16 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    private int latestScore;
     private int currentLevel;
     private LevelManager levelManager;
     private GameObject levelContainer;
     private GameObject gameOverScreen;
     private GameObject startMenu;
-    private GameObject gameUI;
+    private GameObject spaceShip;
 
     void Awake()
     {
@@ -18,19 +20,15 @@ public class GameManager : MonoBehaviour
         startMenu = GameObject.Find("StartMenu");
         levelContainer = GameObject.Find("Level");
         gameOverScreen = GameObject.Find("GameOverScreen");
+        spaceShip = GameObject.Find("SpaceShip");
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         gameOverScreen.SetActive(false);
         levelContainer.SetActive(false);
         startMenu.SetActive(true);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        spaceShip.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider trigger)
@@ -47,6 +45,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Start");
         levelContainer.SetActive(true);
         startMenu.SetActive(false);
+        spaceShip.SetActive(true);
         currentLevel = 1;
         levelManager.ChoosenLevel(currentLevel);
     }
@@ -54,9 +53,25 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game Over");
         gameOverScreen.SetActive(true);
+        levelContainer.SetActive(false);
+        startMenu.SetActive(false);
+        spaceShip.SetActive(false);
     }
 
-    public void StartMenu() {
+    public void StartMenu()
+    {
         startMenu.SetActive(true);
+        levelContainer.SetActive(false);
+        gameOverScreen.SetActive(false);
+        spaceShip.SetActive(false);
+    }
+
+    IEnumerator GetHighScores()
+    {
+        return null;
+    }
+    IEnumerator SetHighScore()
+    {
+        return null;
     }
 }

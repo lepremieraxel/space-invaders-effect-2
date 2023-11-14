@@ -18,6 +18,7 @@ public class LevelManager : MonoBehaviour
     private bool isPlayable = false;
     private int choosenLevel;
     private InvadersManager invadersManager;
+    private int currentScore;
 
 
     void Awake()
@@ -27,6 +28,10 @@ public class LevelManager : MonoBehaviour
         spawnPoints = GameObject.Find("SpawnPoints").transform;
         invadersParent = GameObject.Find("Invaders");
         invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
+    }
+    void Start()
+    {
+        currentScore = 0;
     }
 
     void Update()

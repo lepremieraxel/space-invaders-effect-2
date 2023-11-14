@@ -67,11 +67,6 @@ public class Invader : MonoBehaviour
         }
     }
 
-    public int GetRand(int length)
-    {
-        int random = Random.Range(0, length);
-        return random;
-    }
     public void SetHp(int hp)
     {
         this.hp = hp;
