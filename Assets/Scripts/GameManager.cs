@@ -43,17 +43,12 @@ public class GameManager : MonoBehaviour
     }
 
     public void StartGame()
-    // quand on clique sur start, lance le level 1
     {
-        Debug.Log("Start1");
+        Debug.Log("Start");
         levelContainer.SetActive(true);
-        Debug.Log("Start2");
         startMenu.SetActive(false);
-        Debug.Log("Start3");
         currentLevel = 1;
-        Debug.Log("Start4");
         levelManager.ChoosenLevel(currentLevel);
-        Debug.Log("Start5");
     }
     public void GameOver()
     {
