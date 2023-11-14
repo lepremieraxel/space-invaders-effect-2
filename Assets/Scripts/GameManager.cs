@@ -5,25 +5,26 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] int currentLevel = 0;
-    [SerializeField] LevelManager levelManager;
-    [SerializeField] GameObject startButton;
-    [SerializeField] GameObject levelContainer;
-    private GameObject levelTitle;
+    private int currentLevel;
+    private LevelManager levelManager;
+    private GameObject levelContainer;
+    private GameObject gameOverScreen;
+    private GameObject startMenu;
+    private GameObject gameUI;
 
     void Awake()
     {
-        startButton = GameObject.Find("Start");
-        levelContainer = GameObject.Find("Level");
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
-        levelTitle = GameObject.Find("LevelTitle");
+        startMenu = GameObject.Find("StartMenu");
+        levelContainer = GameObject.Find("Level");
+        gameOverScreen = GameObject.Find("GameOverScreen");
     }
     // Start is called before the first frame update
     void Start()
     {
-        startButton.SetActive(true);
+        gameOverScreen.SetActive(false);
         levelContainer.SetActive(false);
-        levelTitle.SetActive(false);
+        startMenu.SetActive(true);
     }
 
     // Update is called once per frame
@@ -32,13 +33,35 @@ public class GameManager : MonoBehaviour
         
     }
 
+    private void OnTriggerEnter(Collider trigger)
+    {
+        if (trigger.gameObject.CompareTag("Invader"))
+        {
+            Destroy(trigger.gameObject);
+            GameOver();
+        }
+    }
+
     public void StartGame()
     // quand on clique sur start, lance le level 1
     {
-        Debug.Log("start");
-        currentLevel = 1;
-        startButton.SetActive(false);
+        Debug.Log("Start1");
         levelContainer.SetActive(true);
+        Debug.Log("Start2");
+        startMenu.SetActive(false);
+        Debug.Log("Start3");
+        currentLevel = 1;
+        Debug.Log("Start4");
         levelManager.ChoosenLevel(currentLevel);
+        Debug.Log("Start5");
+    }
+    public void GameOver()
+    {
+        Debug.Log("Game Over");
+        gameOverScreen.SetActive(true);
+    }
+
+    public void StartMenu() {
+        startMenu.SetActive(true);
     }
 }

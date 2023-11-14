@@ -7,18 +7,18 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] GameObject invaderPrefab;
     [SerializeField] string levelFile = "Assets/Level.csv";
+    [SerializeField] GameObject invaderTemplate;
     private Text levelTitleText;
     private GameObject levelTitle;
     private Transform spawnPoints;
     private GameObject invadersParent;
     private float titleTime = 2f;
-    private int ennemiesCount = 0;
-    private int currentWave = 0;
+    private float cooldownSpawn = 1f;
     private bool isPlayable = false;
     private int choosenLevel;
-    
+    private InvadersManager invadersManager;
+
 
     void Awake()
     {
@@ -26,11 +26,11 @@ public class LevelManager : MonoBehaviour
         levelTitle = GameObject.Find("LevelTitle");
         spawnPoints = GameObject.Find("SpawnPoints").transform;
         invadersParent = GameObject.Find("Invaders");
+        invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
     }
 
     void Update()
     {
-        ennemiesCount = invadersParent.transform.childCount;
     }
 
     public void ChoosenLevel(int currentLevel)
@@ -39,47 +39,74 @@ public class LevelManager : MonoBehaviour
         choosenLevel = currentLevel;
         string[] lines = File.ReadAllLines(levelFile);
         string[] level = lines[currentLevel].Split(';');
-        if(currentLevel <= level.Length)
+        if(currentLevel <= lines.Length)
         {
             StartCoroutine(StartLevel(level));
         } else
         {
-            Debug.Log("end");
+            Debug.Log("End");
         }
     }
 
     IEnumerator StartLevel(string[] level)
     {
+        isPlayable = false;
         levelTitle.SetActive(true);
         levelTitleText.text = level[1];
         yield return new WaitForSeconds(titleTime);
         levelTitle.SetActive(false);
-        string[] waves = level[2].Split("|");
-        StartCoroutine(Wave(int.Parse(waves[currentWave])));
-        if(ennemiesCount <= 0 && currentWave < waves.Length)
+        StartCoroutine(CountDown(3));
+        yield return new WaitForSeconds(3);
+        isPlayable = true;
+
+        int wave = int.Parse(level[2]);
+        int newEnemy = 0;
+        while(newEnemy <= wave)
         {
-            currentWave++;
-            StartCoroutine(Wave(int.Parse(waves[currentWave])));
-        } else if(ennemiesCount <= 0 && currentWave >= waves.Length && choosenLevel < level.Length)
+            int randEnemy = Random.Range(3, 8);
+            int randColor = Random.Range(0, invadersManager.invadersMaterials.Count);
+            int randMesh = Random.Range(0, invadersManager.invadersMeshes.Count);
+            int randSpeed = Random.Range(1, 3);
+            int randLeft = Random.Range(1, 3);
+            if (randEnemy != 7)
+            {
+                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+                newEnemy += randEnemy;
+            } else if(choosenLevel < 5)
+            {
+                randEnemy = Random.Range(8, 16);
+                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+                newEnemy += randEnemy;
+            } else if(choosenLevel >= 5){
+                randEnemy = Random.Range(8, 54);
+                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+                newEnemy += randEnemy;
+            }
+            yield return new WaitForSeconds(cooldownSpawn);
+        }
+        /*if(newEnemy >= wave)
         {
             choosenLevel++;
             ChoosenLevel(choosenLevel);
-        }
+        }*/
+
+        yield return new WaitForSeconds(titleTime);
     }
 
-    IEnumerator Wave(int nbEnnemies)
+    IEnumerator Wave(int nbEnnemies, int randMesh, int randColor, int randSpeed, int randLeft)
     {
-        levelTitleText.text = "Wave " + currentWave.ToString();
-        levelTitle.SetActive(true);
-        yield return new WaitForSeconds(titleTime);
-        levelTitle.SetActive(false);
+        int currentSpawnedEnemies = 0;
         for(int i = 0; i < nbEnnemies; i++)
         {
-            Instantiate(invaderPrefab, spawnPoints.GetChild(ennemiesCount).position, Quaternion.identity, invadersParent.transform);
-            ennemiesCount++;
+            GameObject currentInvaderGameObject = Instantiate(invaderTemplate, spawnPoints.GetChild(currentSpawnedEnemies).position, Quaternion.Euler(-90,0,90), invadersParent.transform);
+            Invader newlyCreatedInvader = currentInvaderGameObject.GetComponent<Invader>();
+            newlyCreatedInvader.speed = randSpeed;
+            newlyCreatedInvader.meshRenderer.material = invadersManager.invadersMaterials[randColor];
+            newlyCreatedInvader.meshFilter.mesh = invadersManager.invadersMeshes[randMesh];
+            newlyCreatedInvader.mustGoToLeft = randLeft == 1 ? true : false;
+            currentSpawnedEnemies++;
         }
-        StartCoroutine(CountDown(3));
-        isPlayable = true;
+        yield return null;
     }
 
     IEnumerator CountDown(int c)
@@ -87,7 +114,13 @@ public class LevelManager : MonoBehaviour
         levelTitle.SetActive(true);
         for (int i = c; i >= 0; i--)
         {
-            levelTitleText.text = i.ToString();
+            if(i != 0)
+            {
+                levelTitleText.text = i.ToString();
+            } else
+            {
+                levelTitleText.text = "GO";
+            }
             yield return new WaitForSeconds(1);
         }
         levelTitle.SetActive(false);
