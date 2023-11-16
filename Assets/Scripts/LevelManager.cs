@@ -19,6 +19,15 @@ public class LevelManager : MonoBehaviour
     private int choosenLevel;
     private InvadersManager invadersManager;
     private int currentScore;
+    public IEnumerator waveCoroutine;
+    public IEnumerator startCoroutine;
+    public bool stoppedCoroutine = false;
+    private int maxLittleWave = 7;
+    private int minLittleWave = 3;
+    private int minBigWave;
+    private int maxMediumWave = 16;
+    private int maxBigWave = 54;
+    private int hardLevel = 5;
 
 
     void Awake()
@@ -32,6 +41,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         currentScore = 0;
+        minBigWave = maxLittleWave;
     }
 
     void Update()
@@ -44,9 +54,10 @@ public class LevelManager : MonoBehaviour
         choosenLevel = currentLevel;
         string[] lines = File.ReadAllLines(levelFile);
         string[] level = lines[currentLevel].Split(';');
+        startCoroutine = StartLevel(level);
         if(currentLevel <= lines.Length)
         {
-            StartCoroutine(StartLevel(level));
+            StartCoroutine(startCoroutine);
         } else
         {
             Debug.Log("End");
@@ -66,25 +77,26 @@ public class LevelManager : MonoBehaviour
 
         int wave = int.Parse(level[2]);
         int newEnemy = 0;
-        while(newEnemy <= wave)
+        while(newEnemy <= wave && stoppedCoroutine == false)
         {
-            int randEnemy = Random.Range(3, 8);
+            int randEnemy = Random.Range(minLittleWave, maxLittleWave+1);
             int randColor = Random.Range(0, invadersManager.invadersMaterials.Count);
             int randMesh = Random.Range(0, invadersManager.invadersMeshes.Count);
             int randSpeed = Random.Range(1, 3);
             int randLeft = Random.Range(1, 3);
-            if (randEnemy != 7)
+            waveCoroutine = Wave(randEnemy, randMesh, randColor, randSpeed, randLeft);
+            if (randEnemy != maxLittleWave)
             {
-                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+                StartCoroutine(waveCoroutine);
                 newEnemy += randEnemy;
-            } else if(choosenLevel < 5)
+            } else if(choosenLevel < hardLevel)
             {
-                randEnemy = Random.Range(8, 16);
-                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+                randEnemy = Random.Range(minBigWave, maxMediumWave);
+                StartCoroutine(waveCoroutine);
                 newEnemy += randEnemy;
-            } else if(choosenLevel >= 5){
-                randEnemy = Random.Range(8, 54);
-                StartCoroutine(Wave(randEnemy, randMesh, randColor, randSpeed, randLeft));
+            } else if(choosenLevel >= hardLevel){
+                randEnemy = Random.Range(minBigWave, maxBigWave);
+                StartCoroutine(waveCoroutine);
                 newEnemy += randEnemy;
             }
             yield return new WaitForSeconds(cooldownSpawn);
@@ -98,7 +110,7 @@ public class LevelManager : MonoBehaviour
         yield return new WaitForSeconds(titleTime);
     }
 
-    IEnumerator Wave(int nbEnnemies, int randMesh, int randColor, int randSpeed, int randLeft)
+    public IEnumerator Wave(int nbEnnemies, int randMesh, int randColor, int randSpeed, int randLeft)
     {
         int currentSpawnedEnemies = 0;
         for(int i = 0; i < nbEnnemies; i++)

@@ -17,7 +17,12 @@ public class Invader : MonoBehaviour
     private InvadersManager invadersManager;
     private List<Mesh> meshesList;
     private List<Material> materialsList;
+    private Rigidbody rb;
 
+    public void Awake()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
     public void Start()
     {
         hp = 1;
@@ -64,6 +69,18 @@ public class Invader : MonoBehaviour
         else
         {
             transform.Translate(0,yNeg*speed,0);
+        }
+    }
+    public void StopMoving(bool isMoving)
+    {
+        if (isMoving)
+        {
+            x = 0f;
+            y = 0f;
+            yNeg = 0f;
+        } else
+        {
+            x = 0.03f; y = 0.15f; yNeg = -0.15f;
         }
     }
 

@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour
     private GameObject gameOverScreen;
     private GameObject startMenu;
     private GameObject spaceShip;
+    private GameObject invadersParent;
 
     void Awake()
     {
@@ -21,37 +22,54 @@ public class GameManager : MonoBehaviour
         levelContainer = GameObject.Find("Level");
         gameOverScreen = GameObject.Find("GameOverScreen");
         spaceShip = GameObject.Find("SpaceShip");
+        invadersParent = GameObject.Find("Invaders");
     }
 
     void Start()
     {
-        gameOverScreen.SetActive(false);
-        levelContainer.SetActive(false);
-        startMenu.SetActive(true);
-        spaceShip.SetActive(false);
+        
     }
 
     private void OnTriggerEnter(Collider trigger)
     {
         if (trigger.gameObject.CompareTag("Invader"))
         {
-            Destroy(trigger.gameObject);
+            StopCoroutine(levelManager.waveCoroutine);
+            StopCoroutine(levelManager.startCoroutine);
+            levelManager.stoppedCoroutine = true;
+            DestroyAllInvaders();
             GameOver();
         }
     }
+    public void DestroyAllInvaders()
+    {
+        int i = 0;
+        GameObject[] invaders = new GameObject[invadersParent.transform.childCount];
 
+        foreach(Transform invader in invadersParent.transform)
+        {
+            invaders[i] = invader.gameObject;
+            i++;
+        }
+        foreach(GameObject invader in invaders)
+        {
+            Destroy(invader);
+        }
+    }
     public void StartGame()
     {
         Debug.Log("Start");
+        gameOverScreen.SetActive(false);
         levelContainer.SetActive(true);
         startMenu.SetActive(false);
         spaceShip.SetActive(true);
         currentLevel = 1;
+        levelManager.stoppedCoroutine = false;
         levelManager.ChoosenLevel(currentLevel);
     }
     public void GameOver()
     {
-        Debug.Log("Game Over");
+        Debug.Log("GameOver");
         gameOverScreen.SetActive(true);
         levelContainer.SetActive(false);
         startMenu.SetActive(false);
