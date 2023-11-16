@@ -10,10 +10,12 @@ public class GameManager : MonoBehaviour
     private int currentLevel;
     private LevelManager levelManager;
     private GameObject levelContainer;
-    private GameObject gameOverScreen;
+    public GameObject gameOverScreen;
     private GameObject startMenu;
     private GameObject spaceShip;
     private GameObject invadersParent;
+
+    public SpaceShipManager spaceShipManager;
 
     void Awake()
     {
@@ -69,7 +71,8 @@ public class GameManager : MonoBehaviour
     }
     public void GameOver()
     {
-        Debug.Log("GameOver");
+        Debug.Log("Game Over");
+        spaceShipManager.canControlShip = false;
         gameOverScreen.SetActive(true);
         levelContainer.SetActive(false);
         startMenu.SetActive(false);
@@ -91,5 +94,10 @@ public class GameManager : MonoBehaviour
     IEnumerator SetHighScore()
     {
         return null;
+    }
+
+    public void Retry()
+    {
+        Debug.Log("retry pressed");
     }
 }

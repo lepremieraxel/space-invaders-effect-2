@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour
     private int maxBigWave = 54;
     private int hardLevel = 5;
 
+    public SpaceShipManager spaceShipManager;
 
     void Awake()
     {
@@ -74,6 +75,8 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(CountDown(3));
         yield return new WaitForSeconds(3);
         isPlayable = true;
+        spaceShipManager.canControlShip = true;
+        Debug.Log("peut controler l'UFO");
 
         int wave = int.Parse(level[2]);
         int newEnemy = 0;
