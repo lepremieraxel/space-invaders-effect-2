@@ -8,16 +8,18 @@ public class GameManager : MonoBehaviour
     private int currentLevel;
     private LevelManager levelManager;
     private GameObject levelContainer;
-    private GameObject gameOverScreen;
+    public GameObject gameOverScreen;
     private GameObject startMenu;
     private GameObject gameUI;
+
+    public SpaceShipManager spaceShipManager;
 
     void Awake()
     {
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         startMenu = GameObject.Find("StartMenu");
         levelContainer = GameObject.Find("Level");
-        gameOverScreen = GameObject.Find("GameOverScreen");
+        //gameOverScreen = GameObject.Find("GameOverScreen");
     }
     // Start is called before the first frame update
     void Start()
@@ -53,10 +55,16 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Debug.Log("Game Over");
+        spaceShipManager.canControlShip = false;
         gameOverScreen.SetActive(true);
     }
 
     public void StartMenu() {
         startMenu.SetActive(true);
+    }
+
+    public void Retry()
+    {
+        Debug.Log("retry pressed");
     }
 }
