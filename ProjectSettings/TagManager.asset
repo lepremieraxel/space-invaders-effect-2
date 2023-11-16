@@ -11,7 +11,7 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - UI2
+  - 
   - Water
   - UI
   - Sol
@@ -43,9 +43,6 @@ TagManager:
   m_SortingLayers:
   - name: UI
     uniqueID: 3395639295
-    locked: 0
-  - name: UI2
-    uniqueID: 3348591581
     locked: 0
   - name: Default
     uniqueID: 0

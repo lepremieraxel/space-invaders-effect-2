@@ -83,29 +83,4 @@ public class Invader : MonoBehaviour
             x = 0.03f; y = 0.15f; yNeg = -0.15f;
         }
     }
-
-    public void SetHp(int hp)
-    {
-        this.hp = hp;
-    }
-    public void SetDamage(int damage)
-    {
-        this.damage = damage;
-    }
-    public void SetSpeed(int speed)
-    {
-        this.speed = speed;
-    }
-    public void SetColor(int color)
-    {
-        meshRenderer.material = materialsList[color];
-    }
-    public void SetMesh(int mesh)
-    {
-        meshFilter.mesh = meshesList[mesh];
-    }
-    public void SetLeft(int left)
-    {
-        mustGoToLeft = left == 1 ? true : false;
-    }
 }

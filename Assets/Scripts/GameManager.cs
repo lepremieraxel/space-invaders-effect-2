@@ -14,12 +14,12 @@ public class GameManager : MonoBehaviour
     private GameObject startMenu;
     private GameObject spaceShip;
     private GameObject invadersParent;
-
-    public SpaceShipManager spaceShipManager;
+    private SpaceShipManager spaceShipManager;
 
     void Awake()
     {
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
+        spaceShipManager = GameObject.Find("SpaceShipManager").GetComponent<SpaceShipManager>();
         startMenu = GameObject.Find("StartMenu");
         levelContainer = GameObject.Find("Level");
         gameOverScreen = GameObject.Find("GameOverScreen");
@@ -66,12 +66,14 @@ public class GameManager : MonoBehaviour
         startMenu.SetActive(false);
         spaceShip.SetActive(true);
         currentLevel = 1;
+        levelManager.currentScore = 0;
         levelManager.stoppedCoroutine = false;
         levelManager.ChoosenLevel(currentLevel);
     }
     public void GameOver()
     {
         Debug.Log("Game Over");
+        latestScore = levelManager.currentScore;
         spaceShipManager.canControlShip = false;
         gameOverScreen.SetActive(true);
         levelContainer.SetActive(false);
@@ -94,10 +96,5 @@ public class GameManager : MonoBehaviour
     IEnumerator SetHighScore()
     {
         return null;
-    }
-
-    public void Retry()
-    {
-        Debug.Log("retry pressed");
     }
 }

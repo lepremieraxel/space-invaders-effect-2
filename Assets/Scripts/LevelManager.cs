@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] string levelFile = "Assets/Level.csv";
+    [SerializeField] string levelFile = "Assets/Scripts/Level.csv";
     [SerializeField] GameObject invaderTemplate;
     private Text levelTitleText;
     private GameObject levelTitle;
@@ -18,7 +18,7 @@ public class LevelManager : MonoBehaviour
     private bool isPlayable = false;
     private int choosenLevel;
     private InvadersManager invadersManager;
-    private int currentScore;
+    public int currentScore;
     public IEnumerator waveCoroutine;
     public IEnumerator startCoroutine;
     public bool stoppedCoroutine = false;
@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
     private int maxBigWave = 54;
     private int hardLevel = 5;
 
-    public SpaceShipManager spaceShipManager;
+    private SpaceShipManager spaceShipManager;
 
     void Awake()
     {
@@ -38,10 +38,10 @@ public class LevelManager : MonoBehaviour
         spawnPoints = GameObject.Find("SpawnPoints").transform;
         invadersParent = GameObject.Find("Invaders");
         invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
+        spaceShipManager = GameObject.Find("SpaceShipManager").GetComponent<SpaceShipManager>();
     }
     void Start()
     {
-        currentScore = 0;
         minBigWave = maxLittleWave;
     }
 
