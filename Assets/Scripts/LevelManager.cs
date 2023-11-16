@@ -145,4 +145,9 @@ public class LevelManager : MonoBehaviour
         }
         levelTitle.SetActive(false);
     }
+
+    public void AddScore(int score)
+    {
+        Debug.Log(score);
+    }
 }

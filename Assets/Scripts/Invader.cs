@@ -6,6 +6,7 @@ public class Invader : MonoBehaviour
 {
     private int hp;
     private int damage;
+    private int score;
     public int speed;
     private float x;
     private float y;
@@ -18,6 +19,7 @@ public class Invader : MonoBehaviour
     private List<Mesh> meshesList;
     private List<Material> materialsList;
     private Rigidbody rb;
+    private LevelManager levelManager;
 
     public void Awake()
     {
@@ -27,11 +29,13 @@ public class Invader : MonoBehaviour
     {
         hp = 1;
         damage = 1;
+        score = 3;
         x = 0.03f; y = 0.15f; yNeg = -0.15f;
         pos = Vector3.zero;
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
         invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
+        levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         meshesList = invadersManager.invadersMeshes;
         materialsList = invadersManager.invadersMaterials;
     }
@@ -81,6 +85,15 @@ public class Invader : MonoBehaviour
         } else
         {
             x = 0.03f; y = 0.15f; yNeg = -0.15f;
+        }
+    }
+    public void TookDamage(int damage)
+    {
+        hp -= damage;
+        if(hp <= 0)
+        {
+            levelManager.AddScore(score);
+            Destroy(gameObject);
         }
     }
 }
