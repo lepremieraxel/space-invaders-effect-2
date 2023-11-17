@@ -1,0 +1,34 @@
+{
+    "name": "RightButton",
+    "maps": [
+        {
+            "name": "New action map",
+            "id": "7a1ce3c5-f228-4b79-b20b-b64e78ed11e3",
+            "actions": [
+                {
+                    "name": "GoingRight",
+                    "type": "Button",
+                    "id": "ca2b83db-d69c-4f5f-8f0b-9336811a5f31",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "490a99e0-4cf3-4fe2-8013-50cdc8668d0a",
+                    "path": "<Joystick>/stick/right",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GoingRight",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

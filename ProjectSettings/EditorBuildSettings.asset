@@ -5,10 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Lucas.unity
+    guid: b079212e91b560d439f28d076ba26890
+  - enabled: 1
+    path: Assets/Scenes/Axel.unity
+    guid: ab485334d939c964b979eac503234c3e
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: bbf00c136aff5df48878d76406ff1c8a,
+      type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 73a1d682d9e00364aa62b2a2bda1a302,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 278915dd999302a49afb91da66232ae8,

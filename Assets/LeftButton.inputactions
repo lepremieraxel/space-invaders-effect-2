@@ -1,0 +1,34 @@
+{
+    "name": "LeftButton",
+    "maps": [
+        {
+            "name": "New action map",
+            "id": "51339758-36c6-4c3b-b95b-656fb04a7bec",
+            "actions": [
+                {
+                    "name": "GoingLeft",
+                    "type": "Button",
+                    "id": "e5f928cc-5fb9-42c9-9102-09c33ba95687",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "00aa663b-8901-464f-ae3a-0b5d1982cde2",
+                    "path": "<Joystick>/stick/left",
+                    "interactions": "Hold",
+                    "processors": "",
+                    "groups": "",
+                    "action": "GoingLeft",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
