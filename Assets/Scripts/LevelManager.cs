@@ -94,8 +94,6 @@ public class LevelManager : MonoBehaviour
         StartCoroutine(CountDown(3));
         yield return new WaitForSeconds(3);
         isPlayable = true;
-        spaceShipManager.canControlShip = true;
-        Debug.Log("peut controler l'UFO");
 
         int wave = int.Parse(level[2]);
         int newEnemy = 0;
@@ -130,8 +128,6 @@ public class LevelManager : MonoBehaviour
             choosenLevel++;
             ChoosenLevel(choosenLevel);
         }
-
-        yield return new WaitForSeconds(titleTime);
     }
 
     public IEnumerator Wave(int nbEnnemies, int randMesh, int randColor, int randSpeed, int randLeft)
@@ -172,6 +168,7 @@ public class LevelManager : MonoBehaviour
 
     public void AddScore(int score)
     {
-        scoreText.text = "Score : " + score.ToString();
+        currentScore += score;
+        scoreText.text = "Score : " + currentScore.ToString();
     }
 }

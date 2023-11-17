@@ -1,19 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     private int latestScore;
     private int currentLevel;
+    private string webRequestUrl = "https://space-invaders-effect.axelmarcial.com";
     private LevelManager levelManager;
     private GameObject levelContainer;
     private GameObject gameOverScreen;
     private GameObject startMenu;
     private GameObject spaceShip;
     private GameObject invadersParent;
+    private Text latestScoreText;
     private SpaceShipManager spaceShipManager;
 
     void Awake()
@@ -25,6 +27,7 @@ public class GameManager : MonoBehaviour
         gameOverScreen = GameObject.Find("GameOverScreen");
         spaceShip = GameObject.Find("SpaceShip");
         invadersParent = GameObject.Find("Invaders");
+        latestScoreText = GameObject.Find("LatestScore").GetComponent<Text>();
     }
 
     void Start()
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("Game Over");
         latestScore = levelManager.currentScore;
+        latestScoreText.text = "Your Score : " + latestScore.ToString();
         spaceShipManager.canControlShip = false;
         gameOverScreen.SetActive(true);
         levelContainer.SetActive(false);
@@ -91,10 +95,25 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GetHighScores()
     {
-        return null;
+
+        yield return null;
     }
-    IEnumerator SetHighScore()
+    IEnumerator PostHighScore(string username, int score)
     {
-        return null;
+        WWWForm postForm = new WWWForm();
+        postForm.AddField("username", username);
+        postForm.AddField("score", score);
+        using(UnityWebRequest postRequest = UnityWebRequest.Post(webRequestUrl, postForm))
+        {
+            yield return postRequest.SendWebRequest();
+            if (postRequest.result == UnityWebRequest.Result.ConnectionError || postRequest.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.Log(postRequest.error);
+            }
+            else
+            {
+                Debug.Log("Post Request Complete!");
+            }
+        }
     }
 }
