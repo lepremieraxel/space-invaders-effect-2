@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using UnityEditor.ShaderGraph;
+using System.Text.RegularExpressions;
+using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using System;
 
 public class GameManager : MonoBehaviour
 {
@@ -26,6 +27,10 @@ public class GameManager : MonoBehaviour
     private AudioManager audioManager;
     private Text usernameInput;
     private Text statusPost;
+    private GameManager gameManagerOG;
+    private GameObject usernameParent;
+    private GameObject scoreParent;
+    private Regex msgRegex = new Regex(@"[a - zA - Z0 - 9] +\&+[0-9]+\|");
 
     void Awake()
     {
@@ -43,11 +48,13 @@ public class GameManager : MonoBehaviour
         audioManager = GameObject.Find("Main Camera").GetComponent<AudioManager>();
         usernameInput = GameObject.Find("InputNameText").GetComponent<Text>();
         statusPost = GameObject.Find("StatusPost").GetComponent<Text>();
+        gameManagerOG = GameObject.Find("GameManager").GetComponent<GameManager>();
+        usernameParent = GameObject.Find("Liste Noms");
+        scoreParent = GameObject.Find("Liste Scores");
     }
 
     void Start()
     {
-        StartCoroutine(GetHighScores());
     }
 
     private void OnTriggerEnter(Collider trigger)
@@ -128,6 +135,7 @@ public class GameManager : MonoBehaviour
     }
     public void HighscoreMenu()
     {
+        //gameManagerOG.GetHighScoreFunction();
         highscoreMenu.SetActive(true);
         startMenu.SetActive(false);
         optionMenu.SetActive(false);
@@ -143,13 +151,78 @@ public class GameManager : MonoBehaviour
     {
         StartCoroutine(SetHighScore(usernameInput.text, latestScore));
     }
+    public void GetHighScoreFunction()
+    {
+        StartCoroutine(GetHighScores());
+    }
+
+    private class Score
+    {
+        public string username;
+        public int score;
+    }
 
     IEnumerator GetHighScores()
     {
-        using(UnityWebRequest getRequest = UnityWebRequest.Get(webRequestUrlGet))
+        UnityWebRequest www = UnityWebRequest.Get(webRequestUrlGet);
+        yield return www.SendWebRequest();
+
+        if(www.result == UnityWebRequest.Result.Success)
         {
-            yield return getRequest.SendWebRequest();
-            Debug.Log(getRequest.responseCode);
+            string fileContent = www.downloadHandler.text;
+            if(string.IsNullOrEmpty(fileContent))
+            {
+                Debug.LogError("Text file is empty");
+            } else
+            {
+                Debug.Log("File : " + fileContent);
+
+                string[] lines = fileContent.Split('|');
+
+                List<Score> allScores = new List<Score>();
+                List<Score> tenHighScores = new List<Score>();
+
+                for(int i = 0; i < lines.Length-1; i++)
+                {
+                    Debug.Log(lines[i]);
+                    if (Regex.Match(lines[i], @"[a - zA - Z0 - 9] +\&+[0-9]+\|").Success)
+                    {
+                        string currentUsername = lines[i].Split('&')[0];
+                        int currentScore = int.Parse(lines[i].Split('&')[1]);
+
+                        allScores.Add(new Score { username = currentUsername, score = currentScore });
+                    }
+                }
+                allScores.Sort((a, b) =>  b.score.CompareTo(a.score));
+                for (int i = 0; i < 10 && i < allScores.Count; i++)
+                {
+                    tenHighScores.Add(allScores[i]);
+                }
+                int currentParent = 0;
+                int u = 0;
+                int s = 0;
+                GameObject[] usernameTexts = new GameObject[10];
+                foreach (GameObject usernameText in usernameParent.transform)
+                {
+                    usernameTexts[u] = usernameText.gameObject;
+                    u++;
+                }
+                GameObject[] scoreTexts = new GameObject[10];
+                foreach(GameObject scoreText in scoreParent.transform)
+                {
+                    scoreTexts[s] = scoreText.gameObject;
+                    s++;
+                }
+                foreach (Score score in tenHighScores)
+                {
+                    usernameTexts[currentParent].GetComponent<Text>().text = score.username;
+                    scoreTexts[currentParent].GetComponent<Text>().text = score.score.ToString();
+                    currentParent++;
+                }
+            }
+        } else
+        {
+            Debug.LogError(www.error);
         }
     }
     IEnumerator SetHighScore(string username, int score)
