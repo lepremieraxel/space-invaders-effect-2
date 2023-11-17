@@ -77,7 +77,7 @@ public class LaserLogic : MonoBehaviour
 
     private void Update()
     {
-        //Activate();
+        Activate();
 
         float triggerValue = controller.activateActionValue.action.ReadValue<float>();
 
