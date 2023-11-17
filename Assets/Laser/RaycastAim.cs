@@ -5,13 +5,19 @@ using UnityEngine;
 
 public class RaycastAim : MonoBehaviour
 {
-    [SerializeField] int castLength;
+    [SerializeField] private int castLength;
     private Invader invader;
-    [SerializeField] int laserDamage;
+    public MeshRenderer invaderMeshRenderer;
+
+    public Material explosionColor;
+
+    [SerializeField] private int laserDamage;
 
     public Vector3 hitPoint;
 
-    private void FixedUpdate()
+    [SerializeField] private float explosionBloomIntensity;
+
+     private void FixedUpdate()
     {
         GetHitPoint();
     }
@@ -24,13 +30,19 @@ public class RaycastAim : MonoBehaviour
 
         if (Physics.Raycast(transform.position, transform.forward, out hit, castLength))
         {
+            invader = hit.collider.GetComponent<Invader>();
+            invaderMeshRenderer = hit.collider.GetComponent<MeshRenderer>();
             //Debug.Log("HitPoint " + hit.point);
             hitPoint = hit.point;
 
-            if (hit.collider.CompareTag("Invader"))
+            if (hit.collider.gameObject.tag == "Invader")
             {
-                invader = hit.collider.GetComponent<Invader>();
+                //Debug.Log("FoeColor = " + foeMeshRenderer.material.color);
+
+                explosionColor.color = invaderMeshRenderer.material.color * explosionBloomIntensity;
+
                 invader.TookDamage(laserDamage);
+                //Debug.Log("FoeHP = " + foeBehaviour.healthPoint);
             }
         }
 

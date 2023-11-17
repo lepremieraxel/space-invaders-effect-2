@@ -1,34 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.PlayerSettings;
+using static UnityEngine.ParticleSystem;
 
 public class FoeBehaviour : MonoBehaviour
 {
     [SerializeField] public float healthPoint;
-    [SerializeField] private ParticleSystem explosionParticles;
-    [SerializeField] private float delayBeforeDeath;
-    //[SerializeField] private int nmbParticles;
-    //[SerializeField] private Collider foeCollider;
+
+    [SerializeField] private ParticleSystem explosionEffect;
+
+    private Color randomColor;
+    [SerializeField] private MeshRenderer foeMeshRenderer;
+
+    private bool isExplosed = false;
+
 
     private void Awake()
     {
         healthPoint = 1f;
-        //Instantiate(explosionParticles, this.transform.position, Quaternion.identity);
+
+        foeMeshRenderer.material.color = randomColor;
     }
 
     void Update()
     {
         //Debug.Log("Foe HP = " + healthPoint);
-        if (healthPoint <= 0)
+        if (healthPoint <= 0 && !isExplosed)
         {
-            Destroy(gameObject);
+            for (int i = 0; i < 1; i++)
+            {
+                Instantiate(explosionEffect, transform.position, Quaternion.identity);
+                isExplosed = true;
+                Destroy(gameObject);
+            }
         }
-
-        //Debug.Log("EPS duration = " + explosionParticles.main.duration);
-    }
-
-    private void OnDestroy()
-    {
-        explosionParticles.Play();
     }
 }

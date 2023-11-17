@@ -10,7 +10,7 @@ public class LaserLogic : MonoBehaviour
     [SerializeField] private Transform _muzzlePoint;
     [SerializeField] private float _maxLength;
 
-    public RaycastAim raycastAim;
+    [SerializeField] private RaycastAim raycastAim;
 
     /*[SerializeField] private Camera mainCam;
     private Vector3 mousePos;*/
@@ -67,13 +67,17 @@ public class LaserLogic : MonoBehaviour
 
     private void Update()
     {
-        //Activate();
-
         float triggerValue = controller.activateActionValue.action.ReadValue<float>();
 
         if ((triggerValue > triggerButtonThreshold) && !isTriggered)
         {
+            /*if (_beam.enabled)
+            {
+                return;
+            }*/
+
             Activate();
+            //raycastAim.GetHitPoint();
             //Debug.Log("triggerButton");
             isTriggered = true;
         }
@@ -97,7 +101,7 @@ public class LaserLogic : MonoBehaviour
         _beam.SetPosition(0, _muzzlePoint.position);
         _beam.SetPosition(1, raycastAim.hitPoint);
 
-        _hitParticles.transform.position = _beam.GetPosition(1);
+        _hitParticles.transform.position = raycastAim.hitPoint;
 
         //Debug.Log("ParticlesPosition " + _hitParticles.transform.position);
 

@@ -130,6 +130,8 @@ MonoBehaviour:
   mustGoToLeft: 0
   meshFilter: {fileID: 4739946545784755876}
   meshRenderer: {fileID: 6947619641373024168}
+  explosionEffect: {fileID: 4404977023846670579, guid: 12346ff1a338a56419edd4af24f6ffdc,
+    type: 3}
 --- !u!65 &3183655662059661967
 BoxCollider:
   m_ObjectHideFlags: 0

@@ -25,6 +25,9 @@ public class Invader : MonoBehaviour
 
     private int totalEnemiesKilled;
 
+    [SerializeField] private ParticleSystem explosionEffect;
+    private bool isExplosed = false;
+
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -102,6 +105,11 @@ public class Invader : MonoBehaviour
         hp -= damage;
         if(hp <= 0)
         {
+            if(!isExplosed)
+            {
+                Instantiate(explosionEffect, transform.position, Quaternion.identity);
+                isExplosed = true;
+            }
             totalEnemiesKilled++;
             PlayerPrefs.SetInt("totalEnemiesKilled", totalEnemiesKilled);
             levelManager.AddScore(score);
