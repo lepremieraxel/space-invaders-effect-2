@@ -56,7 +56,7 @@ public class SpaceShipManager : MonoBehaviour
         // SPACESHIP MOVEMENTS WITH VR LEFT JOYSTICK
         if (canControlShip == true)
         {
-            Debug.Log(triggerValue);
+            //Debug.Log(triggerValue);
             //VR Input to move spaceshift to the left
             if (canGoLeft == true && (triggerValue < -0.5) && !isTriggered)
             {
