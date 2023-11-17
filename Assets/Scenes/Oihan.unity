@@ -3850,7 +3850,7 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0c2436314d5b8bb4195c82c7b63f0f54,
         type: 3}
       propertyPath: m_Name
-      value: earth_textured
+      value: Earth
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -8258,7 +8258,6 @@ GameObject:
   - component: {fileID: 1951151761}
   - component: {fileID: 1951151760}
   - component: {fileID: 1951151759}
-  - component: {fileID: 1951151763}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -8494,15 +8493,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!45 &1951151763
-Skybox:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1951151757}
-  m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: f76e8f7da0f63364094db057f3844f2f, type: 2}
 --- !u!1 &1955808079
 GameObject:
   m_ObjectHideFlags: 0
