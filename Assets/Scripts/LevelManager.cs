@@ -2,34 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] string levelFile = "Assets/Scripts/Level.csv";
-    [SerializeField] GameObject invaderTemplate;
+    [SerializeField] private string levelFile = "Assets/Scripts/Level.csv";
+    [SerializeField] private GameObject invaderTemplate;
+
     private Text levelTitleText;
     private GameObject levelTitle;
     private Transform spawnPoints;
     private GameObject invadersParent;
+    private Text scoreText;
+
     private float titleTime = 2f;
     private float cooldownSpawn = 1f;
-    private bool isPlayable = false;
-    private int choosenLevel;
-    private InvadersManager invadersManager;
-    public int currentScore;
-    public IEnumerator waveCoroutine;
-    public IEnumerator startCoroutine;
-    public bool stoppedCoroutine = false;
     private int maxLittleWave = 7;
     private int minLittleWave = 3;
     private int minBigWave;
     private int maxMediumWave = 16;
     private int maxBigWave = 54;
     private int hardLevel = 5;
+    private int totalEnemiesSpawned;
 
+    private bool isPlayable = false;
+    private int choosenLevel;
+
+    private InvadersManager invadersManager;
     private SpaceShipManager spaceShipManager;
+
+    public int currentScore;
+    public int enemyAlive = 0;
+    public IEnumerator waveCoroutine;
+    public IEnumerator startCoroutine;
+    public bool stoppedCoroutine = false;
 
     void Awake()
     {
@@ -37,8 +45,18 @@ public class LevelManager : MonoBehaviour
         levelTitle = GameObject.Find("LevelTitle");
         spawnPoints = GameObject.Find("SpawnPoints").transform;
         invadersParent = GameObject.Find("Invaders");
+        scoreText = GameObject.Find("Score").GetComponent<Text>();
         invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
         spaceShipManager = GameObject.Find("SpaceShipManager").GetComponent<SpaceShipManager>();
+
+        if (!PlayerPrefs.HasKey("totalEnemiesSpawned"))
+        {
+            PlayerPrefs.SetInt("totalEnemiesSpawned", 0);
+            totalEnemiesSpawned = 0;
+        } else
+        {
+            totalEnemiesSpawned = PlayerPrefs.GetInt("totalEnemiesSpawned");
+        }
     }
     void Start()
     {
@@ -47,11 +65,13 @@ public class LevelManager : MonoBehaviour
 
     void Update()
     {
+        spaceShipManager.canControlShip = isPlayable;
     }
 
     public void ChoosenLevel(int currentLevel)
     // lis le fichier csv et récupère la ligne placé en paramètres
     {
+        isPlayable = false;
         choosenLevel = currentLevel;
         string[] lines = File.ReadAllLines(levelFile);
         string[] level = lines[currentLevel].Split(';');
@@ -67,7 +87,6 @@ public class LevelManager : MonoBehaviour
 
     IEnumerator StartLevel(string[] level)
     {
-        isPlayable = false;
         levelTitle.SetActive(true);
         levelTitleText.text = level[1];
         yield return new WaitForSeconds(titleTime);
@@ -104,27 +123,32 @@ public class LevelManager : MonoBehaviour
             }
             yield return new WaitForSeconds(cooldownSpawn);
         }
-        /*if(newEnemy >= wave)
+        if(newEnemy >= wave && enemyAlive == 0)
         {
+            isPlayable = false;
+            spaceShipManager.spaceShip.transform.position = new Vector3(0f, 0.95f, 1.5f);
             choosenLevel++;
             ChoosenLevel(choosenLevel);
-        }*/
+        }
 
         yield return new WaitForSeconds(titleTime);
     }
 
     public IEnumerator Wave(int nbEnnemies, int randMesh, int randColor, int randSpeed, int randLeft)
     {
-        int currentSpawnedEnemies = 0;
-        for(int i = 0; i < nbEnnemies; i++)
+        int waveEnemies = 0;
+        for (int i = 0; i < nbEnnemies; i++)
         {
-            GameObject currentInvaderGameObject = Instantiate(invaderTemplate, spawnPoints.GetChild(currentSpawnedEnemies).position, Quaternion.Euler(-90,0,90), invadersParent.transform);
+            GameObject currentInvaderGameObject = Instantiate(invaderTemplate, spawnPoints.GetChild(waveEnemies).position, Quaternion.Euler(-90,0,90), invadersParent.transform);
             Invader newlyCreatedInvader = currentInvaderGameObject.GetComponent<Invader>();
             newlyCreatedInvader.speed = randSpeed;
             newlyCreatedInvader.meshRenderer.material = invadersManager.invadersMaterials[randColor];
             newlyCreatedInvader.meshFilter.mesh = invadersManager.invadersMeshes[randMesh];
             newlyCreatedInvader.mustGoToLeft = randLeft == 1 ? true : false;
-            currentSpawnedEnemies++;
+            waveEnemies++;
+            enemyAlive++;
+            totalEnemiesSpawned++;
+            PlayerPrefs.SetInt("totalEnemiesSpawned", totalEnemiesSpawned);
         }
         yield return null;
     }
@@ -148,6 +172,6 @@ public class LevelManager : MonoBehaviour
 
     public void AddScore(int score)
     {
-        Debug.Log(score);
+        scoreText.text = "Score : " + score.ToString();
     }
 }

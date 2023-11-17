@@ -6,19 +6,20 @@ using UnityEngine.TextCore.Text;
 
 public class SpaceShipManager : MonoBehaviour
 {
-    public GameObject SpaceShip;
-    public float speed;
+    public GameObject spaceShip;
+    public bool canControlShip;
+
+    [SerializeField] private float speed;
 
     private bool canGoLeft;
     private bool canGoRight;
 
-    public GameObject limitX_Left;
-    public GameObject limitX_Right;
+    [SerializeField] private GameObject limitX_Left;
+    [SerializeField] private GameObject limitX_Right;
     
     private float max_X_Left;
     private float max_X_Right;
 
-    public bool canControlShip;
 
     // Start is called before the first frame update
     void Start()
@@ -34,7 +35,6 @@ public class SpaceShipManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
     }
 
     private void FixedUpdate()
@@ -44,16 +44,16 @@ public class SpaceShipManager : MonoBehaviour
             // SpaceShip movements to go left and right on the X axis
             if (canGoLeft == true && Input.GetKey(KeyCode.LeftArrow))
             {
-                SpaceShip.transform.Translate(-speed * Time.deltaTime, 0, 0);
+                spaceShip.transform.Translate(-speed * Time.deltaTime, 0, 0);
                 
             }
             if (canGoRight == true && Input.GetKey(KeyCode.RightArrow)) 
             {
-                SpaceShip.transform.Translate(speed * Time.deltaTime, 0, 0);
+                spaceShip.transform.Translate(speed * Time.deltaTime, 0, 0);
             }
 
             // SpaceShip movement limits on the X axis
-            if (SpaceShip.transform.position.x <= max_X_Left)
+            if (spaceShip.transform.position.x <= max_X_Left)
             {
                 canGoLeft = false;
                 Debug.Log("Left wall touched");
@@ -64,7 +64,7 @@ public class SpaceShipManager : MonoBehaviour
             }
 
             // SpaceShip movement limits on the X axis
-            if (SpaceShip.transform.position.x >= max_X_Right)
+            if (spaceShip.transform.position.x >= max_X_Right)
             {
                 canGoRight = false;
                 Debug.Log("Right wall touched");

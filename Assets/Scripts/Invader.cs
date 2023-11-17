@@ -5,33 +5,43 @@ using UnityEngine;
 public class Invader : MonoBehaviour
 {
     private int hp;
-    private int damage;
     private int score;
     public int speed;
+
     private float x;
     private float y;
     private float yNeg;
-    private Vector3 pos;
+
     public bool mustGoToLeft;
-    public MeshFilter meshFilter;
-    public MeshRenderer meshRenderer;
+
     private InvadersManager invadersManager;
+    private LevelManager levelManager;
     private List<Mesh> meshesList;
     private List<Material> materialsList;
     private Rigidbody rb;
-    private LevelManager levelManager;
+
+    public MeshFilter meshFilter;
+    public MeshRenderer meshRenderer;
+
+    private int totalEnemiesKilled;
 
     public void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        if (!PlayerPrefs.HasKey("totalEnemiesKilled"))
+        {
+            PlayerPrefs.SetInt("totalEnemiesKilled", 0);
+            totalEnemiesKilled = 0;
+        } else
+        {
+            totalEnemiesKilled = PlayerPrefs.GetInt("totalEnemiesKilled");
+        }
     }
     public void Start()
     {
         hp = 1;
-        damage = 1;
         score = 3;
         x = 0.03f; y = 0.15f; yNeg = -0.15f;
-        pos = Vector3.zero;
         meshFilter = GetComponent<MeshFilter>();
         meshRenderer = GetComponent<MeshRenderer>();
         invadersManager = GameObject.Find("InvadersManager").GetComponent<InvadersManager>();
@@ -92,7 +102,10 @@ public class Invader : MonoBehaviour
         hp -= damage;
         if(hp <= 0)
         {
+            totalEnemiesKilled++;
+            PlayerPrefs.SetInt("totalEnemiesKilled", totalEnemiesKilled);
             levelManager.AddScore(score);
+            levelManager.enemyAlive--;
             Destroy(gameObject);
         }
     }

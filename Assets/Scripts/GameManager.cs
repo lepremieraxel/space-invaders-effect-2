@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour
     private int currentLevel;
     private LevelManager levelManager;
     private GameObject levelContainer;
-    public GameObject gameOverScreen;
+    private GameObject gameOverScreen;
     private GameObject startMenu;
     private GameObject spaceShip;
     private GameObject invadersParent;
