@@ -14,21 +14,29 @@ public class GameManager : MonoBehaviour
     private GameObject levelContainer;
     private GameObject gameOverScreen;
     private GameObject startMenu;
+    private GameObject optionMenu;
+    private GameObject highscoreMenu;
     private GameObject spaceShip;
     private GameObject invadersParent;
     private Text latestScoreText;
     private SpaceShipManager spaceShipManager;
+    private AudioSource audioMainCamera;
+    private AudioManager audioManager;
 
     void Awake()
     {
         levelManager = GameObject.Find("LevelManager").GetComponent<LevelManager>();
         spaceShipManager = GameObject.Find("SpaceShipManager").GetComponent<SpaceShipManager>();
         startMenu = GameObject.Find("StartMenu");
+        optionMenu = GameObject.Find("OptionMenu");
+        highscoreMenu = GameObject.Find("HighScoreMenu");
         levelContainer = GameObject.Find("Level");
         gameOverScreen = GameObject.Find("GameOverScreen");
         spaceShip = GameObject.Find("SpaceShip");
         invadersParent = GameObject.Find("Invaders");
         latestScoreText = GameObject.Find("LatestScore").GetComponent<Text>();
+        audioMainCamera = GameObject.Find("Main Camera").GetComponent<AudioSource>();
+        audioManager = GameObject.Find("Main Camera").GetComponent<AudioManager>();
     }
 
     void Start()
@@ -68,7 +76,11 @@ public class GameManager : MonoBehaviour
         gameOverScreen.SetActive(false);
         levelContainer.SetActive(true);
         startMenu.SetActive(false);
+        optionMenu.SetActive(false);
+        highscoreMenu.SetActive(false);
         spaceShip.SetActive(true);
+        audioMainCamera.clip = audioManager.musicGame;
+        audioMainCamera.Play();
         currentLevel = 1;
         levelManager.currentScore = 0;
         levelManager.stoppedCoroutine = false;
@@ -84,14 +96,40 @@ public class GameManager : MonoBehaviour
         levelContainer.SetActive(false);
         startMenu.SetActive(false);
         spaceShip.SetActive(false);
+        optionMenu.SetActive(false);
+        highscoreMenu.SetActive(false);
     }
 
     public void StartMenu()
     {
         startMenu.SetActive(true);
         levelContainer.SetActive(false);
+        optionMenu.SetActive(false);
+        highscoreMenu.SetActive(false);
         gameOverScreen.SetActive(false);
         spaceShip.SetActive(false);
+    }
+    public void OptionMenu()
+    {
+        optionMenu.SetActive(true);
+        startMenu.SetActive(false);
+        highscoreMenu.SetActive(false);
+        levelContainer.SetActive(false);
+        gameOverScreen.SetActive(false);
+        spaceShip.SetActive(false);
+    }
+    public void HighscoreMenu()
+    {
+        highscoreMenu.SetActive(true);
+        startMenu.SetActive(false);
+        optionMenu.SetActive(false);
+        levelContainer.SetActive(false);
+        gameOverScreen.SetActive(false);
+        spaceShip.SetActive(false);
+    }
+    public void ExitGame()
+    {
+        Application.Quit();
     }
 
     IEnumerator GetHighScores()
