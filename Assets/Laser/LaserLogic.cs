@@ -26,9 +26,12 @@ public class LaserLogic : MonoBehaviour
     private float triggerButtonThreshold = 0.9f;
     private bool isTriggered = false;
 
+    private bool activation = false;
+
     private void Awake()
     {
         _beam.enabled = false;
+        activation = false;
     }
 
     private void Activate()
@@ -39,6 +42,10 @@ public class LaserLogic : MonoBehaviour
 
         var main = _spiraleParticles.main;
         main.simulationSpace = ParticleSystemSimulationSpace.Local;
+
+        _spiraleParticles.transform.localScale = new Vector3(1, 1, 1);
+
+        activation = true;
 
         //Debug.Log("Activation");
         //Debug.Log(_spiraleParticles.isPlaying);
@@ -57,27 +64,26 @@ public class LaserLogic : MonoBehaviour
 
         var main = _spiraleParticles.main;
       
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        // _spiraleParitcles.simulationSpace = ParticleSystemSimulationSpace.World;
+        //main.simulationSpace = ParticleSystemSimulationSpace.World;
 
         _spiraleParticles.transform.LookAt(spiralLastPosition);
+
+        _spiraleParticles.transform.localScale = new Vector3(0, 0, 0);
+
+        activation = false;
 
         //Debug.Log("Deactivation");
     }
 
     private void Update()
     {
+        //Activate();
+
         float triggerValue = controller.activateActionValue.action.ReadValue<float>();
 
         if ((triggerValue > triggerButtonThreshold) && !isTriggered)
         {
-            /*if (_beam.enabled)
-            {
-                return;
-            }*/
-
             Activate();
-            //raycastAim.GetHitPoint();
             //Debug.Log("triggerButton");
             isTriggered = true;
         }
@@ -91,6 +97,7 @@ public class LaserLogic : MonoBehaviour
         //Debug.Log(isTriggered);
     }
 
+
     private void FixedUpdate()
     {
         Ray ray = new Ray(_muzzlePoint.position, raycastAim.hitPoint);
@@ -103,7 +110,14 @@ public class LaserLogic : MonoBehaviour
 
         _hitParticles.transform.position = raycastAim.hitPoint;
 
-        //Debug.Log("ParticlesPosition " + _hitParticles.transform.position);
+        if (activation)
+        {
+            raycastAim.GetHitPoint();
+        }
+        else if (!activation)
+        {
+            return;
+        }
 
         Quaternion rotation = Quaternion.LookRotation(_spiraleParticles.transform.position, raycastAim.hitPoint);
         _spiraleParticles.transform.LookAt(raycastAim.hitPoint);

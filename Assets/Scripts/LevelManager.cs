@@ -15,6 +15,7 @@ public class LevelManager : MonoBehaviour
     private GameObject levelTitle;
     private Transform spawnPoints;
     private GameObject invadersParent;
+    private Text scoreText;
 
     private float titleTime = 2f;
     private float cooldownSpawn = 1f;
@@ -41,6 +42,7 @@ public class LevelManager : MonoBehaviour
     void Awake()
     {
         levelTitleText = GameObject.Find("LevelTitle").GetComponent<Text>();
+        scoreText = GameObject.Find("Score").GetComponent<Text>();
         levelTitle = GameObject.Find("LevelTitle");
         spawnPoints = GameObject.Find("SpawnPoints").transform;
         invadersParent = GameObject.Find("Invaders");
@@ -167,6 +169,6 @@ public class LevelManager : MonoBehaviour
     public void AddScore(int score)
     {
         currentScore += score;
-        Debug.Log(currentScore);
+        scoreText.text = currentScore.ToString();
     }
 }

@@ -105,6 +105,7 @@ public class GameManager : MonoBehaviour
         latestScore = levelManager.currentScore;
         latestScoreText.text = "Your Score : " + latestScore.ToString();
         spaceShipManager.canControlShip = false;
+        spaceShipManager.spaceShip.transform.position = new Vector3(0f, 1.1176f, 0f);
         gameOverScreen.SetActive(true);
         levelContainer.SetActive(false);
         startMenu.SetActive(false);

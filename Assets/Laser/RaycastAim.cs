@@ -7,20 +7,15 @@ public class RaycastAim : MonoBehaviour
 {
     [SerializeField] private int castLength;
     private Invader invader;
-    public MeshRenderer invaderMeshRenderer;
+    private Material invaderMaterial;
 
-    public Material explosionColor;
+    public Material explosionMaterial;
 
     [SerializeField] private int laserDamage;
 
     public Vector3 hitPoint;
 
     [SerializeField] private float explosionBloomIntensity;
-
-     private void FixedUpdate()
-    {
-        GetHitPoint();
-    }
 
     public void GetHitPoint()
     {
@@ -31,15 +26,17 @@ public class RaycastAim : MonoBehaviour
         if (Physics.Raycast(transform.position, transform.forward, out hit, castLength))
         {
             invader = hit.collider.GetComponent<Invader>();
-            invaderMeshRenderer = hit.collider.GetComponent<MeshRenderer>();
-            //Debug.Log("HitPoint " + hit.point);
+            invaderMaterial = hit.collider.GetComponent<MeshRenderer>().material;
+
             hitPoint = hit.point;
+
+            //Debug.Log("HitPoint " + hit.point);
 
             if (hit.collider.gameObject.tag == "Invader")
             {
-                //Debug.Log("FoeColor = " + foeMeshRenderer.material.color);
-
-                explosionColor.color = invaderMeshRenderer.material.color * explosionBloomIntensity;
+                Debug.Log("InvaderColor = " + invaderMaterial);
+                explosionMaterial = invaderMaterial;
+                Debug.Log("ExplosionColor = " + explosionMaterial);
 
                 invader.TookDamage(laserDamage);
                 //Debug.Log("FoeHP = " + foeBehaviour.healthPoint);
