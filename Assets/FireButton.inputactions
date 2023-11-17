@@ -1,0 +1,34 @@
+{
+    "name": "FireButton",
+    "maps": [
+        {
+            "name": "New action map",
+            "id": "beacbd5f-3cbf-4a01-ba4c-e2a80dd12345",
+            "actions": [
+                {
+                    "name": "Fire",
+                    "type": "Button",
+                    "id": "3b3db9b1-fe3c-431d-8711-6d314acf34f2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4636455b-0f1a-4a80-91a0-b27188dae6a1",
+                    "path": "<XRController>{RightHand}/triggerTouched",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fire",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
