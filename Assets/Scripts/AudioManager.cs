@@ -5,4 +5,5 @@ using UnityEngine;
 public class AudioManager : MonoBehaviour
 {
     public AudioClip musicGame;
+    public AudioClip menuGame;
 }
