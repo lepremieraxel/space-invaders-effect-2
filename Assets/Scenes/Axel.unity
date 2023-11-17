@@ -29739,7 +29739,7 @@ MonoBehaviour:
   speed: 40
   limitX_Left: {fileID: 1682798900}
   limitX_Right: {fileID: 1049983830}
-  controller: {fileID: 0}
+  controller: {fileID: 527450614}
 --- !u!4 &1291058396
 Transform:
   m_ObjectHideFlags: 0
