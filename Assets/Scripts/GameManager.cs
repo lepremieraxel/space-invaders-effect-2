@@ -8,7 +8,8 @@ public class GameManager : MonoBehaviour
 {
     private int latestScore;
     private int currentLevel;
-    private string webRequestUrl = "https://space-invaders-effect.axelmarcial.com";
+    private string webRequestUrlPost = "https://space-invaders-effect.axelmarcial.com";
+    private string webRequestUrlGet = "https://space-invaders-effect.axelmarcial.com/scores.txt";
     private LevelManager levelManager;
     private GameObject levelContainer;
     private GameObject gameOverScreen;
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        StartCoroutine(GetHighScores());
     }
 
     private void OnTriggerEnter(Collider trigger)
@@ -95,15 +96,18 @@ public class GameManager : MonoBehaviour
 
     IEnumerator GetHighScores()
     {
-
-        yield return null;
+        using(UnityWebRequest getRequest = UnityWebRequest.Get(webRequestUrlGet))
+        {
+            yield return getRequest.SendWebRequest();
+            Debug.Log(getRequest.responseCode);
+        }
     }
     IEnumerator PostHighScore(string username, int score)
     {
         WWWForm postForm = new WWWForm();
         postForm.AddField("username", username);
         postForm.AddField("score", score);
-        using(UnityWebRequest postRequest = UnityWebRequest.Post(webRequestUrl, postForm))
+        using(UnityWebRequest postRequest = UnityWebRequest.Post(webRequestUrlPost, postForm))
         {
             yield return postRequest.SendWebRequest();
             if (postRequest.result == UnityWebRequest.Result.ConnectionError || postRequest.result == UnityWebRequest.Result.ProtocolError)
