@@ -124,7 +124,7 @@ public class LevelManager : MonoBehaviour
         if(newEnemy >= wave && enemyAlive == 0)
         {
             isPlayable = false;
-            spaceShipManager.spaceShip.transform.position = new Vector3(0f, 0.95f, 1.5f);
+            spaceShipManager.spaceShip.transform.position = new Vector3(0f, 1.1176f, 0f);
             choosenLevel++;
             ChoosenLevel(choosenLevel);
         }
