@@ -52,6 +52,7 @@ public class SpaceShipManager : MonoBehaviour
     private void FixedUpdate()
     {
         float triggerValue = controller.translateAnchorAction.action.ReadValue<Vector2>().x;
+        Debug.Log(triggerValue);
 
         // SPACESHIP MOVEMENTS WITH VR LEFT JOYSTICK
         if (canControlShip == true)
