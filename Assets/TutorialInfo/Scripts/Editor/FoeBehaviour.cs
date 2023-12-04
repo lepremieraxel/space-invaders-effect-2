@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using static UnityEditor.PlayerSettings;
 using static UnityEngine.ParticleSystem;
 
